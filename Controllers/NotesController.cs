@@ -36,6 +36,29 @@ namespace NotesAPI.Controllers
             }
         }
 
+        //Deletes a note by id
+        [HttpGet("/api/[controller]/deleteNote/{id}")]
+        public IActionResult deleteNote(string id)
+        {
+            using (var db = new NotesContext())
+            {
+                Note noteToDelete = findNote(id);
+                if (noteToDelete != null)
+                {
+                    db.Remove(noteToDelete);
+                    db.SaveChanges();
+                    Console.WriteLine("Deleted note with id: " + id);
+                    return Ok("Note Deleted");
+                }
+                else
+                {
+                    Console.WriteLine("Could not find note with id: " + id);
+                    return BadRequest("Could not find note with id: " + id);
+                }
+
+            }
+        }
+
         //Edits a note
         [HttpPost("/api/[controller]/editNote")]
         public IActionResult editNote(Note note)
@@ -91,7 +114,6 @@ namespace NotesAPI.Controllers
                 }
             }
         }
-
         
         //Finds a note by id
         [ApiExplorerSettings(IgnoreApi = true)]
