@@ -9,17 +9,9 @@ namespace NotesAPI.Controllers
     public class NotesController : ControllerBase
     {
 
-        [HttpGet("/api/[controller]/getAll")]
-        public Note[] getAll()
-        {
-            using (var db = new NotesContext())
-            {
-                Console.WriteLine("Querying for all notes");
-                Note[] notes = db.Notes.ToArray();
-                return notes;
-            }
-        }
-
+        //Adds a new note
+        //*Currently user provides an id*
+        //*Better version would auto generate the id with Guid.NewGuid.ToString()*
         [HttpPost("/api/[controller]/addNote")]
         public IActionResult addNote(Note note)
         {
@@ -44,6 +36,41 @@ namespace NotesAPI.Controllers
             }
         }
 
+        //Gets a list of all notes in the DB
+        [HttpGet("/api/[controller]/getAll")]
+        public Note[] getAll()
+        {
+            using (var db = new NotesContext())
+            {
+                Console.WriteLine("Querying for all notes");
+                Note[] notes = db.Notes.ToArray();
+                return notes;
+            }
+        }
+
+        //Get a specific note by it's id
+        [HttpGet("/api/[controller]/getNote/{id}")]
+        public IActionResult getNote(string id)
+        {
+            using (var db = new NotesContext())
+            {
+                Console.WriteLine("Request for note with id: " + id);
+                Note note = findNote(id);
+                if (note != null)
+                {
+                    Console.WriteLine("Found note with id: " + id);
+                    return Ok(note);
+                }
+                else
+                {
+                    Console.WriteLine("Could not find note with id: " + id);
+                    return BadRequest("Could not find note with id: " + id);
+                }
+            }
+        }
+
+        
+        //Finds a note by id
         [ApiExplorerSettings(IgnoreApi = true)]
         public Note findNote(string id)
         {
