@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace NotesAPI.Controllers
 {
@@ -11,30 +8,50 @@ namespace NotesAPI.Controllers
     [Route("[controller]")]
     public class NotesController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
-        private readonly ILogger<NotesController> _logger;
-
-        public NotesController(ILogger<NotesController> logger)
+        [HttpGet("/api/[controller]/getAll")]
+        public Note[] getAll()
         {
-            _logger = logger;
+            using (var db = new NotesContext())
+            {
+                Console.WriteLine("Querying for all notes");
+                Note[] notes = db.Notes.ToArray();
+                return notes;
+            }
         }
 
-        [HttpGet]
-        public IEnumerable<Note> Get()
+        [HttpPost("/api/[controller]/addNote")]
+        public IActionResult addNote(Note note)
         {
-            List<Note> notes = new List<Note>();
+            using (var db = new NotesContext())
+            {
+                //Use this if user is not sending their own ID
+                //note.Id = Guid.NewGuid().ToString();
+                Note checkIfExists = findNote(note.Id);
 
-            Note note = new Note();
-            note.Id = "1";
-            note.text = "Text";
+                if (checkIfExists == null)
+                {
+                    db.Add(note);
+                    db.SaveChanges();
+                    Console.WriteLine("Added note with id: " + note.Id);
+                    return Ok(note);
+                }
+                else
+                {
+                    Console.WriteLine("Note already exists with id: " + note.Id);
+                    return BadRequest("Note already exists with id: " + note.Id);
+                }
+            }
+        }
 
-            notes.Add(note);
-
-            return notes;            
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public Note findNote(string id)
+        {
+            using (var db = new NotesContext())
+            {
+                Note note = db.Notes.FirstOrDefault(note => note.Id == id);
+                return note;
+            }
         }
     }
 }
