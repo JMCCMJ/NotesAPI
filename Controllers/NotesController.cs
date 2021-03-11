@@ -36,6 +36,29 @@ namespace NotesAPI.Controllers
             }
         }
 
+        //Edits a note
+        [HttpPost("/api/[controller]/editNote")]
+        public IActionResult editNote(Note note)
+        {
+            using (var db = new NotesContext())
+            {
+                Note checkIfExists = findNote(note.Id);
+
+                if (checkIfExists != null)
+                {
+                    db.Update(note);
+                    db.SaveChanges();
+                    Console.WriteLine("Edited note with id: " + note.Id);
+                    return Ok(note);
+                }
+                else
+                {
+                    Console.WriteLine("Could not find note with id: " + note.Id);
+                    return BadRequest("Could not find note with id: " + note.Id);
+                }
+            }
+        }
+
         //Gets a list of all notes in the DB
         [HttpGet("/api/[controller]/getAll")]
         public Note[] getAll()
