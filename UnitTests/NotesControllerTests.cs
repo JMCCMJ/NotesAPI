@@ -30,51 +30,6 @@ namespace NotesAPI
         }
 
         [Test]
-        public void ApiGet_NoteDoesExistsInDB_ReturnNote()
-        {
-            var controller = new NotesController();
-            IActionResult result = controller.getNote("ExistingNote");
-            var okResult = result as OkObjectResult;
-            var savedNote = okResult.Value as Note;
-            Assert.AreEqual("ExistingNote", savedNote.Id);
-        }
-
-        [Test]
-        public void ApiGet_NoteDoesNotExistsInDB_BadRequest()
-        {
-            var controller = new NotesController();
-            IActionResult result = controller.getNote("BadID");
-            var badResult = result as BadRequestObjectResult;
-            Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
-        }
-
-
-        [Test]
-        public void ApiEdit_NoteDoesNotExistsInDB_BadRequest()
-        {
-            var controller = new NotesController();
-            Note editNote = new Note();
-            editNote.Id = "ExistingNote";
-            editNote.text = "This note exists in the db.";
-            IActionResult result = controller.editNote(editNote);
-            var okResult = result as OkObjectResult;
-            var savedNote = okResult.Value;
-            Assert.AreEqual(editNote, savedNote);
-        }
-
-        [Test]
-        public void ApiEdit_NoteDoesExistsInDB_ReturnEditedNote()
-        {
-            var controller = new NotesController();
-            Note editNote = new Note();
-            editNote.Id = "BadID";
-            editNote.text = "This note does not exists in the db.";
-            IActionResult result = controller.editNote(editNote);
-            var badResult = result as BadRequestObjectResult;
-            Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
-        }
-
-        [Test]
         public void ApiAdd_NoteDoesNotExistsInDB_ReturnCreatedNote()
         {
             var controller = new NotesController();
@@ -115,6 +70,58 @@ namespace NotesAPI
             IActionResult result = controller.deleteNote("BadID");
             var badResult = result as BadRequestObjectResult;
             Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
+        }
+
+        [Test]
+        public void ApiEdit_NoteDoesExistsInDB_ReturnEditedNote()
+        {
+            var controller = new NotesController();
+            Note editNote = new Note();
+            editNote.Id = "BadID";
+            editNote.text = "This note does not exists in the db.";
+            IActionResult result = controller.editNote(editNote);
+            var badResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
+        }
+
+        [Test]
+        public void ApiEdit_NoteDoesNotExistsInDB_BadRequest()
+        {
+            var controller = new NotesController();
+            Note editNote = new Note();
+            editNote.Id = "ExistingNote";
+            editNote.text = "This note exists in the db.";
+            IActionResult result = controller.editNote(editNote);
+            var okResult = result as OkObjectResult;
+            var savedNote = okResult.Value;
+            Assert.AreEqual(editNote, savedNote);
+        }
+
+        [Test]
+        public void ApiGet_NoteDoesExistsInDB_ReturnNote()
+        {
+            var controller = new NotesController();
+            IActionResult result = controller.getNote("ExistingNote");
+            var okResult = result as OkObjectResult;
+            var savedNote = okResult.Value as Note;
+            Assert.AreEqual("ExistingNote", savedNote.Id);
+        }
+
+        [Test]
+        public void ApiGet_NoteDoesNotExistsInDB_BadRequest()
+        {
+            var controller = new NotesController();
+            IActionResult result = controller.getNote("BadID");
+            var badResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
+        }
+
+        [Test]
+        public void ApiGetAll_DbExists_ReturnNoteArray()
+        {
+            var controller = new NotesController();
+            var result = controller.getAll();
+            Assert.NotNull(result);
         }
     }
 }
