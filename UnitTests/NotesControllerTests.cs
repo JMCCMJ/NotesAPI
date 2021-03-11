@@ -30,6 +30,26 @@ namespace NotesAPI
         }
 
         [Test]
+        public void ApiGet_NoteDoesExistsInDB_ReturnNote()
+        {
+            var controller = new NotesController();
+            IActionResult result = controller.getNote("ExistingNote");
+            var okResult = result as OkObjectResult;
+            var savedNote = okResult.Value as Note;
+            Assert.AreEqual("ExistingNote", savedNote.Id);
+        }
+
+        [Test]
+        public void ApiGet_NoteDoesNotExistsInDB_BadRequest()
+        {
+            var controller = new NotesController();
+            IActionResult result = controller.getNote("BadID");
+            var badResult = result as BadRequestObjectResult;
+            Assert.AreEqual("Could not find note with id: BadID", badResult.Value);
+        }
+
+
+        [Test]
         public void ApiEdit_NoteDoesNotExistsInDB_BadRequest()
         {
             var controller = new NotesController();
