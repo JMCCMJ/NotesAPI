@@ -1,5 +1,7 @@
 # NotesAPI
 
+## A simple API that demonstrates creating, updating, querying, and deleteing items in a database through API calls
+
 Ensure dotnet CLI is installed https://docs.microsoft.com/en-us/dotnet/core/tools/
 
 1. Clone the repository and open a terminal in the folder
