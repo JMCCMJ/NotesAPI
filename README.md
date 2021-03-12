@@ -8,7 +8,9 @@ Ensure dotnet CLI is installed https://docs.microsoft.com/en-us/dotnet/core/tool
 
 Use `https://localhost:<port>/swagger/index.html` for easy API usage
 
-To run unit tests:
+To run unit tests: `dotnet run`
+
+Alternatively:
 
 1. Open the solution in Visual Studio
 2. In the solution explorer, right-click NotesControllerTests.cs and select Run Tests
