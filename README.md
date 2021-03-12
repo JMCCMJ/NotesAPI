@@ -8,7 +8,7 @@ Ensure dotnet CLI is installed https://docs.microsoft.com/en-us/dotnet/core/tool
 
 Use `https://localhost:<port>/swagger/index.html` for easy API usage
 
-To run unit tests: `dotnet run`
+To run unit tests: `dotnet test`
 
 Alternatively:
 
